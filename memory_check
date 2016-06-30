@@ -11,7 +11,7 @@ memuse1=${memuse/.*}
 
 #for inform user to input 3 option and arguments.
 if [ $# -ne 6 ]; then
-	echo -e "Input 3 options with 3 arguments!\nexample: -c 90 -w 80 -e garodavia@chikka.com " >&2
+	echo -e "Input 3 options with 3 arguments!\nexample: -c 90 -w 80 -e email@mine.com " >&2
 	exit 0
 fi
 
