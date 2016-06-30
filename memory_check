@@ -1,5 +1,5 @@
 #!/bin/bash
-
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/monitor/scripts
 #for checking current memory usage
 TOTAL_MEMORY=$( free -m | awk 'NR==2{printf "Memory Usage: %s/%sMB (%.2f%%)\n", $3,$2,$3*100/$2 }' )
 echo $TOTAL_MEMORY
