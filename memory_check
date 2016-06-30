@@ -71,4 +71,4 @@ elif [ $memuse1 -ge $warning ]; then
  
 fi
 
-exit 0
+
