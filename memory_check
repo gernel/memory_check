@@ -2,8 +2,6 @@
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/monitor/scripts
 #for checking current memory usage
 TOTAL_MEMORY=$( free -m | awk 'NR==2{printf "Memory Usage: %s/%sMB (%.2f%%)\n", $3,$2,$3*100/$2 }' )
-echo $TOTAL_MEMORY
-
 memuse=$(free -m | awk 'NR==2{printf "%.2f%", $3*100/$2}')
 
 #for forcing memuse to be integer.
@@ -56,7 +54,6 @@ if [ $memuse1 -ge $critical ]; then
 
         #for email 
         mutt -s "$date memory check - critical" $email < /tmp/message.txt
-        echo -e "Email Sent" >&2
         exit 2
 fi
 
