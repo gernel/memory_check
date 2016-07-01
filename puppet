@@ -1,0 +1,94 @@
+# list of software needed
+$packages = ['vim-enhanced','git','curl','wget','ntp']
+
+# url of the script for github
+$scriptraw = ['wget https://raw.githubusercontent.com/gernel/memory_check/master/memory_check']
+
+# for install package to ensure that on variable on $pack are installed on the system.
+class installpackage {
+package { $packages :
+    provider => yum,
+    ensure   => installed,
+        } # end of package
+} # end of installpackage
+
+# for adding user
+class user_add {
+  user { 'monitor' :
+        name => 'monitor',
+        ensure => present,
+        shell => '/bin/bash',
+        password => '*',
+        home => '/home/monitor',
+        system => true,
+        managehome => true,
+        } # end of user
+} # end of adduser
+
+# for creating directory
+class directory {
+file { '/home/monitor/scripts':
+    ensure => 'directory',
+    owner  => 'monitor',
+        } # end of file
+} # end of filedir
+
+# for directory source
+class filedirsrc {
+file { '/home/monitor/src':
+    ensure => 'directory',
+    owner  => 'monitor',
+        } # end of file
+} # end of filedirsrc
+
+# passing the value of $raw in to a file
+class script_path {
+exec {  $scriptraw:
+        cwd => '/home/monitor/scripts',
+        creates => '/home/monitor/scripts/memory_check',
+        path => ['/usr/bin/'],
+        } # end of exec
+} # end of getscript
+
+# creating link file to be targeted on the $raw script
+class link {
+file { '/home/monitor/src/my_memory_check':
+    ensure => 'link',
+    target => '/home/monitor/scripts/memory_check',
+        } # end of file
+} #end of link
+
+# cron that will run every 10mins
+class cronjob {
+cron {'memory_check':
+        command => "sh /home/monitor/src/my_memory_check -w 2 -c 5 -e garodavia@chikka.com",
+        ensure => 'present',
+        minute => '*/10',
+        hour => '*',
+        month => '*',
+        weekday  => '*',
+        monthday => '*',
+        } # end of cron
+} #end of cronjob
+
+# checking service of time if always running
+class ntpd {
+service { 'ntpd':
+                  ensure => 'running',
+                  enable => 'true',
+        } # end of service
+} # end of ntpd
+
+# node
+node 'bpx.server.local' {
+include 'installpackage'
+include 'user_add'
+include 'directory'
+include 'filedirsrc'
+include 'script_path'
+include 'link'
+include 'cronjob'
+include 'ntpd'
+
+
+} # end of node
